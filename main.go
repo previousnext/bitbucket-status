@@ -12,7 +12,7 @@ var (
 	cliStatus      = kingpin.Flag("status", "Status").Required().String()
 	cliKey         = kingpin.Flag("key", "Key").Required().String()
 	cliName        = kingpin.Flag("name", "Name").Required().String()
-	cliUrl         = kingpin.Flag("url", "Url").Required().String()
+	cliURL         = kingpin.Flag("url", "URL").Required().String()
 	cliDescription = kingpin.Flag("description", "Description").Required().String()
 	cliUsername    = kingpin.Flag("username", "Username").Required().Envar("BITBUCKET_STATUS_USERNAME").String()
 	cliPassword    = kingpin.Flag("password", "Password").Required().Envar("BITBUCKET_STATUS_PASSWORD").String()
@@ -21,7 +21,7 @@ var (
 	cliRepoSlug    = kingpin.Flag("slug", "Repo slug").Required().Envar("BITBUCKET_REPO_SLUG").String()
 )
 
-const baseUrl = "https://api.bitbucket.org/2.0/repositories"
+const baseURL = "https://api.bitbucket.org/2.0/repositories"
 
 func main() {
 	kingpin.Parse()
@@ -30,12 +30,12 @@ func main() {
 		State:       *cliStatus,
 		Key:         *cliKey,
 		Name:        *cliName,
-		Url:         *cliUrl,
+		URL:         *cliURL,
 		Description: *cliDescription,
 	}
 
 	request := gorequest.New().SetBasicAuth(*cliUsername, *cliPassword)
-	url := fmt.Sprintf("%s/%s/%s/commit/%s/statuses/build", baseUrl, *cliRepoOwner, *cliRepoSlug, *cliCommitHash)
+	url := fmt.Sprintf("%s/%s/%s/commit/%s/statuses/build", baseURL, *cliRepoOwner, *cliRepoSlug, *cliCommitHash)
 	_, body, errs := request.Post(url).
 		Send(status).
 		End()
@@ -50,10 +50,11 @@ func main() {
 	}
 }
 
+// Status is used for submitting a build status to BitBucket.
 type Status struct {
 	State       string `json:"state"`
 	Key         string `json:"key"`
 	Name        string `json:"name"`
-	Url         string `json:"url"`
+	URL         string `json:"url"`
 	Description string `json:"description"`
 }
