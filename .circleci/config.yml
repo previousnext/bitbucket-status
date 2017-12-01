@@ -1,0 +1,12 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.8
+    working_directory: /go/src/github.com/previousnext/bitbucket-status
+    steps:
+      - checkout
+      - run: go get github.com/golang/lint/golint
+      - run:
+          name: Run linting
+          command: make lint
